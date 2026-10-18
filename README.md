@@ -51,7 +51,9 @@ src/prep.py            # data loading, cleaning, variable construction
 src/tables.py          # Tables 2, 3, 4
 src/figures.py         # Figure 1
 src/extension.py       # independent extension + robustness (Tables 5, 6)
-report.md              # empirical report
+report.md              # empirical report (source)
+report.pdf             # empirical report (rendered)
+build_pdf.py           # render report.md -> report.pdf (requires Chrome)
 AI_USE.md              # AI-use disclosure
 ```
 
