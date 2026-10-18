@@ -10,9 +10,15 @@ from $4.25 to $5.05), wave 2 = November-December 1992 (after).
 """
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 CHAIN_NAMES = {1: "Burger King", 2: "KFC", 3: "Roy Rogers", 4: "Wendy's"}
+
+# STATUS2 codes (wave-2 store status). 1 = open; 3 = permanently closed
+# (employment recorded as zero); 0 = refused; 2, 4, 5 = temporarily closed
+# (renovation / road construction / fire), wave-2 employment treated as missing.
+_TEMP_CLOSED = (2, 4, 5)
 
 
 def load_data(path: str = "data/public.csv") -> pd.DataFrame:
@@ -49,22 +55,76 @@ def build_variables(df: pd.DataFrame) -> pd.DataFrame:
     for price in ("PSODA", "PFRY", "PENTREE"):
         d[f"d{price}"] = d[f"{price}2"] - d[price]
 
+    # Price of a full meal (medium soda + small fries + entree, incl. tax).
+    d["meal1"] = d["PSODA"] + d["PFRY"] + d["PENTREE"]
+    d["meal2"] = d["PSODA2"] + d["PFRY2"] + d["PENTREE2"]
+
+    # Percentage full-time employees. Card & Krueger's Table 2 defines this as
+    # full-time workers (excluding managers) as a share of FTE employment:
+    # 100 * EMPFT / (EMPFT + NMGRS + 0.5 * EMPPT).
+    d["pft1"] = 100.0 * d["EMPFT"] / d["fte1"]
+    d["pft2"] = 100.0 * d["EMPFT2"] / d["fte2"]
+
+    # Treatment intensity: the proportional increase in the starting wage needed
+    # to reach the new $5.05 minimum (the paper's GAP variable). Zero for PA and
+    # for NJ stores already paying at least $5.05.
+    d["gap"] = np.where(
+        (d["STATE"] == 1) & (d["WAGE_ST"] < 5.05),
+        (5.05 - d["WAGE_ST"]) / d["WAGE_ST"],
+        0.0,
+    )
+
+    # Wave-2 FTE with closures handled as in Table 3. The raw data already
+    # records wave-2 employment of zero for the six permanently closed stores
+    # (STATUS2 = 3) and missing for temporary closures and refusals.
+    d["fte2_all"] = d["fte2"]
+
+    # Wave-2 FTE with the four temporarily closed stores set to zero (Table 3,
+    # row 5) rather than treated as missing.
+    d["fte2_temp0"] = d["fte2"].where(
+        ~d["STATUS2"].isin(_TEMP_CLOSED), 0.0
+    )
+
+    # NJ wage groups, classified by the wave-1 starting wage (Table 3 cols iv-vi).
+    def _wage_group(w: float) -> str | None:
+        if pd.isna(w):
+            return None
+        if w == 4.25:
+            return "4.25"
+        if w < 5.00:
+            return "4.26-4.99"
+        return "5.00+"
+
+    d["wage_group"] = np.where(
+        d["nj"] == 1, d["WAGE_ST"].apply(_wage_group), None
+    )
+
     return d
 
 
 def balanced_sample(d: pd.DataFrame) -> pd.DataFrame:
-    """Stores that answered wave 2 and remained open (STATUS2 == 1).
+    """The paper's balanced subsample: stores with employment data in both waves.
 
-    This is the main analysis sample: a balanced panel of stores observed in
-    both waves. Stores that closed (STATUS2 = 3), refused (0), or were closed
-    for renovation/construction/fire (2, 4, 5) are excluded from the core
-    results and treated in the robustness checks.
+    Permanently closed stores (wave-2 employment recorded as zero) are included;
+    temporarily closed stores and refusals have missing wave-2 employment and are
+    dropped. This is the sample underlying Table 3, row 4.
     """
-    return d[d["STATUS2"] == 1].copy()
+    return d.dropna(subset=["fte1", "fte2"]).copy()
+
+
+def regression_sample(d: pd.DataFrame) -> pd.DataFrame:
+    """The Table 4 regression sample.
+
+    Stores with employment in both waves and a valid wave-1 starting wage. The
+    GAP variable requires only the wave-1 wage; requiring a wave-2 wage would
+    discard stores whose wave-2 starting wage is legitimately missing and is not
+    needed for any specification in Table 4.
+    """
+    return d.dropna(subset=["fte1", "fte2", "WAGE_ST"]).copy()
 
 
 def wage_bin(w: float) -> str:
-    """Map a starting wage to a labelled bin used in Table 2 and Figure 1."""
+    """Map a starting wage to a labelled bin used in Figure 1."""
     if pd.isna(w):
         return "missing"
     if w == 4.25:

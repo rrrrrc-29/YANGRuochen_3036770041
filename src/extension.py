@@ -34,7 +34,7 @@ def _ensure_dir() -> None:
 
 def _did(outcome: str, data: pd.DataFrame, controls: str = "") -> dict:
     formula = f"{outcome} ~ nj" + controls
-    m = smf.ols(formula, data=data).fit(cov_type="HC1")
+    m = smf.ols(formula, data=data).fit()  # conventional OLS s.e., as in the paper
     return {
         "coef": m.params["nj"],
         "se": m.bse["nj"],
@@ -43,16 +43,20 @@ def _did(outcome: str, data: pd.DataFrame, controls: str = "") -> dict:
     }
 
 
-def table5_price_passthrough(bal: pd.DataFrame) -> pd.DataFrame:
-    """DiD estimates of the minimum-wage effect on menu prices."""
+def table5_price_passthrough(d: pd.DataFrame) -> pd.DataFrame:
+    """DiD estimates of the minimum-wage effect on menu prices.
+
+    Uses all stores with the relevant price recorded in both waves (the OLS
+    routine drops observations with missing price changes).
+    """
     rows = []
     for col, label in PRICE_LABELS.items():
-        r = _did(col, bal, " + chain2 + chain3 + chain4 + CO_OWNED")
+        r = _did(col, d, " + chain2 + chain3 + chain4 + CO_OWNED")
         rows.append(
             {
                 "Menu item": label,
-                "NJ mean change": bal.loc[bal["nj"] == 1, col].mean(),
-                "PA mean change": bal.loc[bal["nj"] == 0, col].mean(),
+                "NJ mean change": d.loc[d["nj"] == 1, col].mean(),
+                "PA mean change": d.loc[d["nj"] == 0, col].mean(),
                 "DiD": r["coef"],
                 "s.e.": r["se"],
                 "t-statistic": r["t"],
@@ -111,7 +115,7 @@ def main() -> None:
     d = build_variables(df)
     bal = balanced_sample(d)
 
-    t5 = table5_price_passthrough(bal)
+    t5 = table5_price_passthrough(d)
     t5.to_csv(os.path.join(RESULTS, "table5_extension_prices.csv"))
     print("Table 5 - extension: price pass-through")
     print(t5.to_string(), "\n")

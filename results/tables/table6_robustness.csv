@@ -1,7 +1,7 @@
 ,Specification,DiD,s.e.,t-statistic,N
-0,"FTE, balanced sample",2.722,1.335,2.038,378
-1,"Headcount, balanced sample",2.327,1.45,1.605,378
-2,Full-time employees only,0.915,1.067,0.857,392
-3,Part-time employees only,-1.555,1.29,-1.206,394
-4,"FTE, initial wage = $4.25 (compliers)",3.64,1.789,2.035,117
-5,"FTE, closures treated as zero employment",2.423,1.344,1.804,389
+0,"FTE, balanced sample",2.75,1.154,2.382,384
+1,"Headcount, balanced sample",2.412,1.323,1.823,384
+2,Full-time employees only,0.686,1.03,0.666,384
+3,Part-time employees only,-1.361,1.373,-0.991,384
+4,"FTE, initial wage = $4.25 (compliers)",3.224,1.778,1.813,120
+5,"FTE, closures treated as zero employment",2.423,1.187,2.042,389

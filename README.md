@@ -36,9 +36,9 @@ without manual modification of the data or code.
 
 | Output | Description |
 | --- | --- |
-| `results/tables/table2_wage_distribution.csv` | Table 2: starting-wage distribution |
-| `results/tables/table3_did.csv` | Table 3: main DiD estimates |
-| `results/tables/table4_regression.csv` | Table 4: regression with controls |
+| `results/tables/table2_means.csv` | Table 2: descriptive means by state and wave |
+| `results/tables/table3_employment.csv` | Table 3: average FTE employment and the main DiD |
+| `results/tables/table4_regression.csv` | Table 4: reduced-form models (NJ dummy and GAP) |
 | `results/tables/table5_extension_prices.csv` | Extension: menu-price pass-through |
 | `results/tables/table6_robustness.csv` | Robustness checks |
 | `results/figures/figure1_wage_distribution.png` | Figure 1: wage distribution |
