@@ -2,6 +2,8 @@
 
 *A Difference-in-Differences Analysis of the New Jersey Fast-Food Industry*
 
+**YANG Ruochen** · Student ID: 3036770041
+
 ---
 
 ## 1. Research question and motivation
