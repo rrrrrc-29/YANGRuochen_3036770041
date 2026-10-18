@@ -40,8 +40,8 @@ the six permanently closed stores and treated as missing for the four temporaril
 closed stores and one refusal. The *balanced subsample* (Table 3, row 4) consists of the
 384 stores with employment in both waves (309 NJ, 75 PA). The *regression sample*
 (Table 4) further requires a valid wave-1 starting wage (needed to construct the wage
-gap), leaving 365 stores; the paper's analogous sample is 357. We do not publish the raw
-data; see `README.md` for access instructions.
+gap), leaving 365 stores; the paper's analogous sample is 357. The raw survey data are
+included in the repository under `data/raw/`.
 
 **Variable definitions.**
 

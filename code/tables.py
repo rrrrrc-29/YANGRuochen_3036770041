@@ -15,9 +15,9 @@ import pandas as pd
 import statsmodels.formula.api as smf
 from scipy import stats
 
-from src.prep import build_variables, load_data, regression_sample
+from code.prep import build_variables, load_data, regression_sample
 
-RESULTS = os.path.join("results", "tables")
+RESULTS = os.path.join("outputs", "tables")
 
 
 def _ensure_dir() -> None:

@@ -11,9 +11,9 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.prep import WAGE_BIN_ORDER, build_variables, load_data, wage_bin
+from code.prep import WAGE_BIN_ORDER, build_variables, load_data, wage_bin
 
-RESULTS = os.path.join("results", "figures")
+RESULTS = os.path.join("outputs", "figures")
 
 
 def figure1_wage_distribution(d: "pd.DataFrame", path: str | None = None) -> str:

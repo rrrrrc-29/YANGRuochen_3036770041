@@ -17,9 +17,9 @@ import os
 import pandas as pd
 import statsmodels.formula.api as smf
 
-from src.prep import balanced_sample, build_variables, load_data
+from code.prep import balanced_sample, build_variables, load_data
 
-RESULTS = os.path.join("results", "tables")
+RESULTS = os.path.join("outputs", "tables")
 
 PRICE_LABELS = {
     "dPSODA": "Medium soda",

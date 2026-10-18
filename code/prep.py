@@ -10,6 +10,8 @@ from $4.25 to $5.05), wave 2 = November-December 1992 (after).
 """
 from __future__ import annotations
 
+import os
+
 import numpy as np
 import pandas as pd
 
@@ -21,9 +23,24 @@ CHAIN_NAMES = {1: "Burger King", 2: "KFC", 3: "Roy Rogers", 4: "Wendy's"}
 _TEMP_CLOSED = (2, 4, 5)
 
 
-def load_data(path: str = "data/public.csv") -> pd.DataFrame:
+def load_data(path: str = "data/raw/public.csv") -> pd.DataFrame:
     """Read the raw survey file."""
     return pd.read_csv(path)
+
+
+PROCESSED = os.path.join("data", "processed", "card_krueger_processed.csv")
+
+
+def save_processed() -> str:
+    """Write the cleaned, variable-constructed dataset to data/processed/.
+
+    Gives a one-file view of every constructed variable used in the analysis,
+    so the processed data can be inspected independently of the code.
+    """
+    os.makedirs(os.path.dirname(PROCESSED), exist_ok=True)
+    d = build_variables(load_data())
+    d.to_csv(PROCESSED, index=False)
+    return PROCESSED
 
 
 def build_variables(df: pd.DataFrame) -> pd.DataFrame:

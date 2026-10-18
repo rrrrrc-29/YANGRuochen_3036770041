@@ -10,14 +10,14 @@ conclusion stated in the report.
 | Task | What AI did | How I checked it |
 | --- | --- | --- |
 | Data exploration | Wrote Python to inspect `public.csv`: shape, missingness, wage distribution, prices. | Read the data dictionary and confirmed 410 rows / 46 columns; checked that the FTE components (`EMPFT`, `EMPPT`, `NMGRS`) exist in both waves. |
-| Variable construction | Drafted `src/prep.py` (FTE = full-time + 0.5·part-time + managers). | Verified the FTE definition against the paper's text, then recomputed FTE by hand for two stores in `data/public.csv` and matched the script's output. |
-| Core replication | Wrote `src/tables.py` and `src/figures.py`; ran the DiD regressions. | Re-ran `python run_all.py` from a clean state; compared the headline DiD (+2.75 FTE) with the paper's +2.76 and confirmed NJ employment rose while PA fell, matching the paper's sign and magnitude. |
-| Extension | Proposed and implemented the menu-price pass-through DiD. | Confirmed `PSODA`/`PFRY`/`PENTREE` exist in both waves; opened `table5_extension_prices.csv` and checked the standard errors and sample sizes. |
-| Report | Drafted `report.md`, `README.md`, and this file. | Opened every CSV in `results/tables/` and confirmed each number in `report.md` matches; read the report top-to-bottom for interpretation. |
+| Variable construction | Drafted `code/prep.py` (FTE = full-time + 0.5·part-time + managers). | Verified the FTE definition against the paper's text, then recomputed FTE by hand for two stores in `data/raw/public.csv` and matched the script's output. |
+| Core replication | Wrote `code/tables.py` and `code/figures.py`; ran the DiD regressions. | Re-ran `python code/run_all.py` from a clean state; compared the headline DiD (+2.75 FTE) with the paper's +2.76 and confirmed NJ employment rose while PA fell, matching the paper's sign and magnitude. |
+| Extension | Proposed and implemented the menu-price pass-through DiD. | Confirmed `PSODA`/`PFRY`/`PENTREE` exist in both waves; opened `outputs/tables/table5_extension_prices.csv` and checked the standard errors and sample sizes. |
+| Report | Drafted `report.md`, `README.md`, and this file. | Opened every CSV in `outputs/tables/` and confirmed each number in `report.md` matches; read the report top-to-bottom for interpretation. |
 
 ## Checks I performed
 
-1. **Reproducibility** — deleted `results/`, then ran `python run_all.py`; all six
+1. **Reproducibility** — deleted `outputs/`, then ran `python code/run_all.py`; all six
    outputs (Tables 2–6 and Figure 1) regenerated, and `git status` stayed clean,
    confirming the workflow reproduces the results from the input data alone.
 2. **Headline DiD** — the main estimate (+2.75 FTE) was compared with Card & Krueger's
@@ -51,6 +51,6 @@ conclusion stated in the report.
 - AI's first draft overstated the precision of the price-extension result; the final
   version reports standard errors and significance levels transparently.
 
-> Before submitting: run `python run_all.py` yourself, confirm the numbers in
-> `results/` match `report.md`, and adjust the table above if any check you performed
+> Before submitting: run `python code/run_all.py` yourself, confirm the numbers in
+> `outputs/` match `report.md`, and adjust the table above if any check you performed
 > differs from what is written.
