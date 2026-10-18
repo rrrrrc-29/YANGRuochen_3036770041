@@ -1,0 +1,5 @@
+,Specification,NJ coefficient,s.e.,t-statistic,N,R-squared
+0,NJ only,2.722,1.335,2.038,378,0.015
+1,+ chain & ownership,2.78,1.344,2.069,378,0.026
+2,+ region dummies,3.097,1.462,2.118,378,0.035
+3,+ initial wage,2.628,1.469,1.789,359,0.039
